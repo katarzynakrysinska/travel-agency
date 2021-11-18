@@ -11,17 +11,19 @@ const createActionName = name => `app/${reducerName}/${name}`;
 // action types
 export const CHANGE_PHRASE = createActionName('CHANGE_PHRASE');
 // TODO - add other action types
-export const ADD_TAG = createActionName('ADD_TAG');
-export const REMOVE_TAG = createActionName('REMOVE_TAG');
-export const CHANGE_DURATION = createActionName('CHANGE_DURATION');
+export const ADD_TAGS = createActionName('ADD_TAGS');
+export const REMOVE_TAGS = createActionName('REMOVE_TAGS');
+export const CHANGE_DURATION_FROM = createActionName('CHANGE_DURATION_FROM');
+export const CHANGE_DURATION_TO = createActionName('CHANGE_DURATION_TO');
 
 
 // action creators
 export const changeSearchPhrase = payload => ({ payload, type: CHANGE_PHRASE });
 // TODO - add other action creators
-export const addTag = payload => ({ payload, type: ADD_TAG });
-export const removeTag = payload => ({ payload, type: REMOVE_TAG });
-export const changeDuration = (type, value) => ({ payload: {[type]: value}, type: CHANGE_DURATION });
+export const addTags = payload => ({ payload, type: ADD_TAGS });
+export const removeTags = payload => ({ payload, type: REMOVE_TAGS });
+export const changeDurationFrom = payload => ({ payload, type: CHANGE_DURATION_FROM });
+export const changeDurationTo = payload => ({ payload, type: CHANGE_DURATION_TO });
 
 
 // reducer
@@ -33,7 +35,7 @@ export default function reducer(statePart = [], action = {}) {
         searchPhrase: action.payload,
       };
       // TODO - handle other action types
-    case ADD_TAG:
+    case ADD_TAGS:
       return {
         ...statePart,
         tags: [
@@ -41,20 +43,27 @@ export default function reducer(statePart = [], action = {}) {
           action.payload,
         ],
       };
-    case REMOVE_TAG:
+    case REMOVE_TAGS:
       return {
         ...statePart,
-        tags: statePart.tags.filter(tag => tag !== action.payload),
+        tags: [...statePart.tags.filter((tag) => tag !== action.payload)],
       };
-    case CHANGE_DURATION:
+    case CHANGE_DURATION_FROM:
       return {
         ...statePart,
-        duration: [
+        duration: {
+          ...statePart.duration,
+          from: action.payload,
+        },
+      };
+    case CHANGE_DURATION_TO:
+      return {
+        ...statePart,
+        duration: {
         ...statePart.duration,
-        {[action.payload.type]: action.payload.value},
-        ],
-      };
-      
+        to: action.payload,
+      },
+    };
     default:
       return statePart;
   }
